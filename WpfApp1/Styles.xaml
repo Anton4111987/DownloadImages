@@ -1,0 +1,61 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style x:Key="Style_Header" TargetType="TextBlock">
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="FontFamily" Value="Consolas" />
+        <Setter Property="FontSize" Value="50" />
+        <Setter Property="FontWeight" Value="Heavy" />
+        <Setter Property="Foreground" Value="DarkRed" />
+    </Style>
+
+    <Style x:Key="Style_Default" TargetType="Control">
+        <Setter Property="Margin" Value="5" />
+        <Setter Property="Padding" Value="3" />
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+    <Style x:Key="Style_LabelInput" TargetType="Label"
+           BasedOn="{StaticResource Style_Default}">
+        <Setter Property="Foreground" Value="DarkBlue" />
+    </Style>
+    <Style x:Key="Style_Input" TargetType="TextBox"
+           BasedOn="{StaticResource Style_Default}">
+        <Setter Property="Foreground" Value="DarkMagenta" />
+    </Style>
+
+    <Style x:Key="Style_ButtonDefault" TargetType="Button"
+           BasedOn="{StaticResource Style_Default}">
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+
+        <Setter Property="Width" Value="150" />
+
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+    <Style x:Key="Style_ButtonStop" TargetType="{x:Type Button}"
+           BasedOn="{StaticResource Style_ButtonDefault}">
+        <Setter Property="Background" Value="Red" />
+    </Style>
+    <Style x:Key="Style_ButtonStart" TargetType="{x:Type Button}"
+           BasedOn="{StaticResource Style_ButtonDefault}">
+        <Setter Property="Background" Value="Green" />
+    </Style>
+
+    <Style x:Key="Style_ButtonDownloadAll" TargetType="{x:Type Button}" 
+        BasedOn="{StaticResource Style_ButtonDefault}">
+        <Setter Property="Background" Value="Aqua" />
+    </Style>
+
+    <Style x:Key="Style_GridInputs" TargetType="{x:Type Grid}">
+        <Setter Property="Margin" Value="0 25 0 0" />
+    </Style>
+
+    <Style x:Key="Style_StackPanel_Vertical" TargetType="{x:Type StackPanel}">
+        <Setter Property="Orientation" Value="Vertical" />
+    </Style>
+    <Style x:Key="Style_StackPanel_Buttons" TargetType="StackPanel">
+        <Setter Property="Orientation" Value="Horizontal" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
+</ResourceDictionary>
