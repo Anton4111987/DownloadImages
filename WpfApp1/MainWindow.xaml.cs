@@ -46,7 +46,6 @@ namespace WpfApp1
         public MainWindow()
         {
             InitializeComponent();
-            
             /* DataContext = this;            
              webClient.DownloadProgressChanged += WebClient_DownloadProgressChanged;
              webClient.DownloadDataCompleted += WebClient_DownloadDataCompleted;*/
@@ -82,7 +81,7 @@ namespace WpfApp1
                 }
                 try
                 {
-                WebClient webClient1 = new WebClient();
+                //WebClient webClient1 = new WebClient();
                     webClient1.DownloadProgressChanged += Client_DownloadProgressChanged;
                     webClient1.DownloadDataCompleted += (s, ea) =>
                     {
@@ -117,7 +116,7 @@ namespace WpfApp1
             }
             try
             {
-                WebClient webClient2 = new WebClient();
+                //WebClient webClient2 = new WebClient();
                 webClient2.DownloadProgressChanged += Client_DownloadProgressChanged;
                 webClient2.DownloadDataCompleted += (s, ea) =>
                 {
@@ -209,48 +208,45 @@ namespace WpfApp1
 
         private async void Button_DownloadAll_OnClick(object sender, RoutedEventArgs e)
         {
-
+           
             isStopLoading = false;
-/*            ProgressBar.Minimum = 0;
-            ProgressBar.Maximum = 100;*/
+           
+            List <Image> images = new List<Image>();
+            images.Add(Image1);
+            images.Add(Image2);
+            images.Add(Image3);
+            List <string> urls = new List<string>();
+            urls.Add(Input_URL1.Text);
+            urls.Add(Input_URL2.Text);
+            urls.Add(Input_URL3.Text);
+            ProgressBar.Minimum = 0;
+            ProgressBar.Maximum = images.Count;
 
-            await LoadImageFromUrl(Input_URL1.Text, Image1);
+   
+           /* webClient.DownloadProgressChanged += (s, e) =>
+            {
+                ProgressBar.Value = e.ProgressPercentage;
+            };*/
+
+            /*await LoadImageFromUrl(Input_URL1.Text, Image1);
             if (isStopLoading) return;
 
             await LoadImageFromUrl(Input_URL2.Text, Image2);
             if (isStopLoading) return;
 
-            await LoadImageFromUrl(Input_URL3.Text, Image3);
-  
-           
-            /* WebClient webClient = new WebClient();
-             imageUrls.Add(Input_URL1.Text);
-             imageUrls.Add(Input_URL2.Text);
-             imageUrls.Add(Input_URL3.Text);
+            await LoadImageFromUrl(Input_URL3.Text, Image3);*/
 
-             ProgressBar.Maximum = imageUrls.Count;
-             WebClient[] webClients = new WebClient[3];
-             BitmapImage[] images = new BitmapImage[3];
-             // Загружаем каждую картинку по URL
-             foreach (string url in imageUrls)
-             //for(int i=0; i<imageUrls.Count;i++)
-             {
-                 int i = 0;
-                 images[i] = new();
-                 images[i].BeginInit();
-                 images[i].StreamSource = new System.IO.MemoryStream();
-                 //images[i].EndInit();
-                 //aaImage[i].Source = images[i];
+            for (int i = 0; i < 3; i++)
+                {
+                await LoadImageFromUrl(urls[i], images[i]);
+                    if (isStopLoading) return;
+                    
+                Thread.Sleep(1000);
+                ProgressBar.Value ++;
+                LabelBar.Content = "Загружено: " + (i+1)+"/"+images.Count;
+            }
+            
 
-                 webClients[i] = new();
-                 // webClient.DownloadFileAsync(new Uri(url), "image.jpg");
-                 webClients[i].DownloadDataAsync(new Uri(url));
-                 webClients[i].DownloadProgressChanged += WebClient_DownloadProgressChanged;
-                 i++;
-             }
-             Image1.Source = images[0];
-             Image2.Source = images[1];
-             Image3.Source = images[2];*/
         }
 
 
@@ -260,29 +256,22 @@ namespace WpfApp1
         {
             try
             {
-                using (WebClient client = new WebClient())
-                {
-                    await client.DownloadDataTaskAsync(new Uri(imageUrl));
-                    //await client.DownloadFileTaskAsync(new Uri(imageUrl), "temp.jpg");
+                    await webClient.DownloadDataTaskAsync(new Uri(imageUrl));
                     if (!isStopLoading)
                     {
                         BitmapImage bitmap = new BitmapImage(new Uri(imageUrl));
                         image.Source = bitmap;
+                    Thread.Sleep(1000);
                     }
-                }
-                
-          
             }
             catch (Exception)
             {
                 MessageBox.Show("Failed to load image.");
             }
-        }
-
-    private void Scroll_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
 
         }
+
+  
 
 
 
