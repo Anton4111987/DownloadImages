@@ -14,49 +14,33 @@ namespace WpfApp1
     {
         public string? Url;
         public string? error;
-        //public WebClient? client;
+        public WebClient? client;
         public BitmapImage? image;
-        public DownloadImage(string Url)
+        public DownloadImage(string Url, WebClient client)
         {
             this.Url = Url;
-            //this.client = client;
+            this.client = client;
         }
 
-        public void DownloadStart()
+        public async Task DownloadStartAsync()
         {
-            using (WebClient client = new WebClient())
+            try
             {
-                try
+                byte[] imageData = await client.DownloadDataTaskAsync(Url);
+                image = new();
+                image.BeginInit();
+                image.StreamSource = new MemoryStream(imageData);
+                image.EndInit();
+            }
+            catch (Exception ex)
                 {
-                    
-                    Task task = new(() =>
-                    {
-                        byte[] imageData = client.DownloadData(Url);
-                       
-                        image = new();
-                        image.BeginInit();
-                        image.StreamSource = new MemoryStream(imageData);
-                        image.EndInit();
-                        
-                    });
-                    task.Start();
-                    task.Wait();
-
-                    // return image;
-                }
-                catch (Exception ex)
-                {
-                    error = ("Ошибка при загрузке изображения: " + ex.Message);
-                    //return null;
-                }
+                error = ("Ошибка при загрузке изображения: " + ex.Message);
             }
         }
 
         public void DownloadStop()
         {            
-                //client?.CancelAsync();
-            
-            
+                client?.CancelAsync();
         }
 
 

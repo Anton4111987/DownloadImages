@@ -25,15 +25,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Label Grid.Row="0" Grid.Column="0"
-            x:Name="Label_Image1"
-            Content="Image1" Grid.ColumnSpan="2" Margin="0,0,266,0"/>
-        <Label Grid.Row="0" Grid.Column="1"
-            x:Name="Label_Image2"
-            Content="Image2"/>
-        <Label Grid.Row="0" Grid.Column="1"
-            x:Name="Label_Image3"
-            Content="Image3" Grid.ColumnSpan="2" Margin="266,0,0,0"/>
+       
 
         <Image Grid.Row="0" Grid.Column="0"
                x:Name="Image1" Grid.ColumnSpan="2" Margin="0,0,266,0"/>
@@ -90,7 +82,7 @@
             Content="Общий прогресс загрузки"
             HorizontalContentAlignment="Center" Margin="0,43,0,43" Grid.RowSpan="3"/>
         <ProgressBar Grid.Row="4"
-            x:Name="Scroll" Orientation="Horizontal"
+            x:Name="ProgressBar" Orientation="Horizontal"
             Margin="0,25,0,10" Width="800" HorizontalAlignment="Center" ValueChanged="Scroll_ValueChanged" Grid.Column="1"/>
         <Button  Grid.Row="5" Grid.Column="1"
             x:Name="DownloadAll"
