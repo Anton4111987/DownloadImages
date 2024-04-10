@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using static System.Net.Mime.MediaTypeNames;
+using Image = System.Windows.Controls.Image;
 
 namespace WpfApp1
 {
@@ -30,6 +31,7 @@ namespace WpfApp1
         private WebClient webClient1 = new WebClient();
         private WebClient webClient2 = new WebClient();
         private WebClient webClient3 = new WebClient();
+        private bool isStopLoading = false;
         public event PropertyChangedEventHandler PropertyChanged;
         private List<string> imageUrls = new List<string>();
         public int TotalProgress
@@ -188,6 +190,7 @@ namespace WpfApp1
 
         private void Button_Stop1_OnClick(object sender, RoutedEventArgs e)
         {
+            isStopLoading = true;
             webClient1.CancelAsync();
             TotalProgress = 0;
         }
@@ -204,67 +207,81 @@ namespace WpfApp1
             TotalProgress = 0;
         }
 
-        private void Button_DownloadAll_OnClick(object sender, RoutedEventArgs e)
+        private async void Button_DownloadAll_OnClick(object sender, RoutedEventArgs e)
         {
-            WebClient webClient = new WebClient();
-            imageUrls.Add(Input_URL1.Text);
-            imageUrls.Add(Input_URL2.Text);
-            imageUrls.Add(Input_URL3.Text);
 
-            ProgressBar.Maximum = imageUrls.Count;
-            WebClient[] webClients = new WebClient[3];
-            BitmapImage[] images = new BitmapImage[3];
-            // Загружаем каждую картинку по URL
-            foreach (string url in imageUrls)
-                //for(int i=0; i<imageUrls.Count;i++)
+            isStopLoading = false;
+/*            ProgressBar.Minimum = 0;
+            ProgressBar.Maximum = 100;*/
+
+            await LoadImageFromUrl(Input_URL1.Text, Image1);
+            if (isStopLoading) return;
+
+            await LoadImageFromUrl(Input_URL2.Text, Image2);
+            if (isStopLoading) return;
+
+            await LoadImageFromUrl(Input_URL3.Text, Image3);
+  
+           
+            /* WebClient webClient = new WebClient();
+             imageUrls.Add(Input_URL1.Text);
+             imageUrls.Add(Input_URL2.Text);
+             imageUrls.Add(Input_URL3.Text);
+
+             ProgressBar.Maximum = imageUrls.Count;
+             WebClient[] webClients = new WebClient[3];
+             BitmapImage[] images = new BitmapImage[3];
+             // Загружаем каждую картинку по URL
+             foreach (string url in imageUrls)
+             //for(int i=0; i<imageUrls.Count;i++)
+             {
+                 int i = 0;
+                 images[i] = new();
+                 images[i].BeginInit();
+                 images[i].StreamSource = new System.IO.MemoryStream();
+                 //images[i].EndInit();
+                 //aaImage[i].Source = images[i];
+
+                 webClients[i] = new();
+                 // webClient.DownloadFileAsync(new Uri(url), "image.jpg");
+                 webClients[i].DownloadDataAsync(new Uri(url));
+                 webClients[i].DownloadProgressChanged += WebClient_DownloadProgressChanged;
+                 i++;
+             }
+             Image1.Source = images[0];
+             Image2.Source = images[1];
+             Image3.Source = images[2];*/
+        }
+
+
+
+
+        private async Task LoadImageFromUrl(string imageUrl, Image image)
+        {
+            try
             {
-                int i= 0;
-                images[i] = new ();
-                images[i].BeginInit();
-                images[i].StreamSource = new System.IO.MemoryStream();
-                //images[i].EndInit();
-                //aaImage[i].Source = images[i];
-
-                webClients[i] = new();
-                    // webClient.DownloadFileAsync(new Uri(url), "image.jpg");
-                    webClients[i].DownloadDataAsync(new Uri(url));
-                webClients[i].DownloadProgressChanged += WebClient_DownloadProgressChanged;
-                i++;
+                using (WebClient client = new WebClient())
+                {
+                    await client.DownloadDataTaskAsync(new Uri(imageUrl));
+                    //await client.DownloadFileTaskAsync(new Uri(imageUrl), "temp.jpg");
+                    if (!isStopLoading)
+                    {
+                        BitmapImage bitmap = new BitmapImage(new Uri(imageUrl));
+                        image.Source = bitmap;
+                    }
+                }
+                
+          
             }
-            Image1.Source = images[0];
-            Image2.Source = images[1];
-            Image3.Source = images[2];
+            catch (Exception)
+            {
+                MessageBox.Show("Failed to load image.");
+            }
         }
 
-        private void Scroll_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    private void Scroll_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
 
-        }
-
-        private void Input_URL1_MouseMove(object sender, MouseEventArgs e)
-        {
-           /* if (Input_URL1.Text == "Введите адрес картинки №1")
-                Input_URL1.Text = "";
-            Input_URL3.Text = "Введите адрес картинки №3";
-            Input_URL2.Text = "Введите адрес картинки №2";*/
-
-        }
-
-        private void Input_URL2_MouseMove(object sender, MouseEventArgs e)
-        {
-           /* if (Input_URL2.Text == "Введите адрес картинки №2")
-                Input_URL2.Text = "";
-            Input_URL3.Text = "Введите адрес картинки №3";
-            Input_URL1.Text = "Введите адрес картинки №1";*/
-
-        }
-
-        private void Input_URL3_MouseMove(object sender, MouseEventArgs e)
-        {
-           /* if (Input_URL3.Text == "Введите адрес картинки №3")
-                Input_URL3.Text = "";
-            Input_URL1.Text = "Введите адрес картинки №3";
-            Input_URL2.Text = "Введите адрес картинки №2";*/
         }
 
 
