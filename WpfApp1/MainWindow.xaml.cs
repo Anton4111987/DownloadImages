@@ -16,51 +16,29 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using static System.Net.Mime.MediaTypeNames;
+using Image = System.Windows.Controls.Image;
 
 namespace WpfApp1
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-   
+
     public partial class MainWindow : Window
     {
-        private int totalProgress;
-        private WebClient webClient = new WebClient();
-        private WebClient webClient1 = new WebClient();
-        private WebClient webClient2 = new WebClient();
-        private WebClient webClient3 = new WebClient();
-        public event PropertyChangedEventHandler PropertyChanged;
-        private List<string> imageUrls = new List<string>();
-        public int TotalProgress
-        {
-            get { return totalProgress; }
-            set
-            {
-                totalProgress = value;
-                //OnPropertyChanged("TotalProgress");
-            }
-        }
+        private WebClient webClient = new ();
+        private WebClient webClient1 = new ();
+        private WebClient webClient2 = new ();
+        private WebClient webClient3 = new ();
+        private bool isStopLoading = false;
+       
         public MainWindow()
         {
             InitializeComponent();
-            
-            /* DataContext = this;            
-             webClient.DownloadProgressChanged += WebClient_DownloadProgressChanged;
-             webClient.DownloadDataCompleted += WebClient_DownloadDataCompleted;*/
         }
-        private void WebClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-        {
-            TotalProgress = e.ProgressPercentage;
-            ProgressBar.Value = e.ProgressPercentage;
-        }
-
+        
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             Image1.Source = null;
             Image2.Source = null;
             Image3.Source = null;
-           
         }
         private void Client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
@@ -69,41 +47,38 @@ namespace WpfApp1
 
         private void Button_Start1_OnClick(object sender, RoutedEventArgs e)
         {
-            if(Input_URL1.Text=="")
+            webClient1 = new();
+            if (Input_URL1.Text=="")
             {
                 MessageBox.Show("Поле ввода адреса 1 не введено", "Error", MessageBoxButton.OK);
                 Input_URL1.Focus();
             }
-                if (Image1.Source != null)
+            if (Image1.Source != null)
+            {
+                Image1.Source = null;
+            }
+            try
+            {
+                webClient1.DownloadProgressChanged += Client_DownloadProgressChanged;
+                webClient1.DownloadDataCompleted += (s, ea) =>
                 {
-                    Image1.Source = null;
-                }
-                try
-                {
-                WebClient webClient1 = new WebClient();
-                    webClient1.DownloadProgressChanged += Client_DownloadProgressChanged;
-                    webClient1.DownloadDataCompleted += (s, ea) =>
-                    {
-                        BitmapImage image = new BitmapImage();
-                        image.BeginInit();
-                        image.StreamSource = new System.IO.MemoryStream(ea.Result);
-                        image.EndInit();
-                        Image1.Source = image;
-                    };
-                    webClient1.DownloadDataAsync(new Uri(Input_URL1.Text));
-                    //Image1.Source = downloadImage.image;
-                }
-                catch(Exception ex)
-                {
-                    MessageBox.Show("Ошибка "+ex);
-                }
+                    BitmapImage image = new BitmapImage();
+                    image.BeginInit();
+                    image.StreamSource = new System.IO.MemoryStream(ea.Result);
+                    image.EndInit();
+                    Image1.Source = image;
+                };
+                webClient1.DownloadDataAsync(new Uri(Input_URL1.Text));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка " + ex);
+            }
         }
-
-        
-    
 
         private void Button_Start2_OnClick(object sender, RoutedEventArgs e)
         {
+            webClient2 = new();
             if (Input_URL2.Text == "")
             {
                 MessageBox.Show("Поле ввода адреса 2 не введено", "Error", MessageBoxButton.OK);
@@ -115,7 +90,6 @@ namespace WpfApp1
             }
             try
             {
-                WebClient webClient2 = new WebClient();
                 webClient2.DownloadProgressChanged += Client_DownloadProgressChanged;
                 webClient2.DownloadDataCompleted += (s, ea) =>
                 {
@@ -126,50 +100,29 @@ namespace WpfApp1
                     Image2.Source = image2;
                 };
                 webClient2.DownloadDataAsync(new Uri(Input_URL2.Text));
-                //Image1.Source = downloadImage.image;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Ошибка " + ex);
             }
-            /*DownloadImage downloadImage = new(Input_URL2.Text, webClient);
-            try
-            {
-                await downloadImage.DownloadStartAsync();
-                Image2.Source = downloadImage.image;
-            }
-            catch
-            {
-                MessageBox.Show(downloadImage.error);
-            }*/
-
         }
 
-        private async void Button_Start3_OnClick(object sender, RoutedEventArgs e)
+        private void Button_Start3_OnClick(object sender, RoutedEventArgs e)
         {
-            /*if (Input_URL3.Text == "")
+            webClient3 = new();
+            if (Input_URL3.Text == "")
             {
-                MessageBox.Show("Поле ввода адреса 3 не введено", "Error", MessageBoxButton.OK);
+                MessageBox.Show("Поле ввода адреса 2 не введено", "Error", MessageBoxButton.OK);
                 Input_URL3.Focus();
             }
             if (Image3.Source != null)
             {
                 Image3.Source = null;
             }
-            DownloadImage downloadImage = new(Input_URL3.Text, webClient);
             try
             {
-                await downloadImage.DownloadStartAsync();
-                Image3.Source = downloadImage.image;
-            }
-            catch
-            {
-                MessageBox.Show(downloadImage.error);
-            }*/
-            try
-            {
-                webClient.DownloadProgressChanged += Client_DownloadProgressChanged;
-                webClient.DownloadDataCompleted += (s, ea) =>
+                webClient3.DownloadProgressChanged += Client_DownloadProgressChanged;
+                webClient3.DownloadDataCompleted += (s, ea) =>
                 {
                     BitmapImage image3 = new BitmapImage();
                     image3.BeginInit();
@@ -177,8 +130,7 @@ namespace WpfApp1
                     image3.EndInit();
                     Image3.Source = image3;
                 };
-                webClient.DownloadDataAsync(new Uri(Input_URL3.Text));
-                //Image1.Source = downloadImage.image;
+                webClient3.DownloadDataAsync(new Uri(Input_URL3.Text));
             }
             catch (Exception ex)
             {
@@ -188,183 +140,62 @@ namespace WpfApp1
 
         private void Button_Stop1_OnClick(object sender, RoutedEventArgs e)
         {
-            webClient1.CancelAsync();
-            TotalProgress = 0;
+            isStopLoading = true;
+            webClient1.Dispose();
+            webClient.Dispose();
         }
 
         private void Button_Stop2_OnClick(object sender, RoutedEventArgs e)
-        {
-            webClient2.CancelAsync();
-            TotalProgress = 0;
+        {            
+            isStopLoading = true;
+            webClient2.Dispose();
+            webClient.Dispose();
         }
 
         private void Button_Stop3_OnClick(object sender, RoutedEventArgs e)
         {
-            webClient3.CancelAsync();
-            TotalProgress = 0;
+            isStopLoading = true;
+            webClient3.Dispose();
+            webClient.Dispose();
         }
 
-        private void Button_DownloadAll_OnClick(object sender, RoutedEventArgs e)
+        private async void Button_DownloadAll_OnClick(object sender, RoutedEventArgs e)
         {
-            WebClient webClient = new WebClient();
-            imageUrls.Add(Input_URL1.Text);
-            imageUrls.Add(Input_URL2.Text);
-            imageUrls.Add(Input_URL3.Text);
-
-            ProgressBar.Maximum = imageUrls.Count;
-            WebClient[] webClients = new WebClient[3];
-            BitmapImage[] images = new BitmapImage[3];
-            // Загружаем каждую картинку по URL
-            foreach (string url in imageUrls)
-                //for(int i=0; i<imageUrls.Count;i++)
+            ProgressBar.Value = 0;
+            isStopLoading = false;
+            List <Image> images = new List<Image>();
+            images.Add(Image1);
+            images.Add(Image2);
+            images.Add(Image3);
+            List <string> urls = new List<string>();
+            urls.Add(Input_URL1.Text);
+            urls.Add(Input_URL2.Text);
+            urls.Add(Input_URL3.Text);
+            webClient.DownloadProgressChanged += Client_DownloadProgressChanged;
+            for (int i = 0; i < images.Count; i++)
             {
-                int i= 0;
-                images[i] = new ();
-                images[i].BeginInit();
-                images[i].StreamSource = new System.IO.MemoryStream();
-                //images[i].EndInit();
-                //aaImage[i].Source = images[i];
-
-                webClients[i] = new();
-                    // webClient.DownloadFileAsync(new Uri(url), "image.jpg");
-                    webClients[i].DownloadDataAsync(new Uri(url));
-                webClients[i].DownloadProgressChanged += WebClient_DownloadProgressChanged;
-                i++;
+                await LoadImageFromUrl(urls[i], images[i]);
+                LabelBar.Content = "Загружено: " + (i + 1) + "/" + images.Count;
+                Thread.Sleep(1000);
             }
-            Image1.Source = images[0];
-            Image2.Source = images[1];
-            Image3.Source = images[2];
+            
         }
 
-        private void Scroll_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private async Task LoadImageFromUrl(string imageUrl, Image image)
         {
-
-        }
-
-        private void Input_URL1_MouseMove(object sender, MouseEventArgs e)
-        {
-           /* if (Input_URL1.Text == "Введите адрес картинки №1")
-                Input_URL1.Text = "";
-            Input_URL3.Text = "Введите адрес картинки №3";
-            Input_URL2.Text = "Введите адрес картинки №2";*/
-
-        }
-
-        private void Input_URL2_MouseMove(object sender, MouseEventArgs e)
-        {
-           /* if (Input_URL2.Text == "Введите адрес картинки №2")
-                Input_URL2.Text = "";
-            Input_URL3.Text = "Введите адрес картинки №3";
-            Input_URL1.Text = "Введите адрес картинки №1";*/
-
-        }
-
-        private void Input_URL3_MouseMove(object sender, MouseEventArgs e)
-        {
-           /* if (Input_URL3.Text == "Введите адрес картинки №3")
-                Input_URL3.Text = "";
-            Input_URL1.Text = "Введите адрес картинки №3";
-            Input_URL2.Text = "Введите адрес картинки №2";*/
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-       /* public partial class MainWindow : Window, INotifyPropertyChanged
-        {
-            private WebClient webClient;
-            private int totalProgress;
-
-            public int TotalProgress
+            try
             {
-                get { return totalProgress; }
-                set
-                {
-                    totalProgress = value;
-                    OnPropertyChanged("TotalProgress");
-                }
+                await webClient.DownloadDataTaskAsync(new Uri(imageUrl));
+                    if (!isStopLoading)
+                    {
+                        BitmapImage bitmap = new BitmapImage(new Uri(imageUrl));
+                        image.Source = bitmap;
+                    }
             }
-
-            public event PropertyChangedEventHandler PropertyChanged;
-
-            public MainWindow()
+            catch (Exception)
             {
-                InitializeComponent();
-                //DataContext = this;
-                webClient = new WebClient();
-                webClient.DownloadProgressChanged += WebClient_DownloadProgressChanged;
-                webClient.DownloadDataCompleted += WebClient_DownloadDataCompleted;
-            }
-
-            private void WebClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-            {
-                TotalProgress = e.ProgressPercentage;
-            }
-
-            private void WebClient_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
-            {
-                BitmapImage image = new BitmapImage();
-                image.BeginInit();
-                image.StreamSource = new System.IO.MemoryStream(e.Result);
-                image.EndInit();
-                Image1.Source = image;
-
-            }
-
-            private void DownloadImage(string url)
-            {
-               // WebClient web = new WebClient();
-                webClient.DownloadProgressChanged += WebClient_DownloadProgressChanged;
-                webClient.DownloadFileCompleted += OnDownloadFileCompleted;
-                webClient.DownloadDataTaskAsync(url);
-            }
-
-            private void OnDownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
-            {
-                *//*var projectName = Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
-                var imagePath = projectName + "\\output.jpg";
-                img.Source = new BitmapImage(new Uri(imagePath));
-                MessageBox.Show("Загрузка файла завершена!");*//*
-
-                BitmapImage image = new BitmapImage();
-                image.BeginInit();
-                image.StreamSource = new MemoryStream(webClient.DownloadDataTaskAsync(url));
-                image.EndInit();
-                Image1.Source = image;
-            }
-
-            *//*private void StartButton_Click(object sender, RoutedEventArgs e)
-            {
-                if (!string.IsNullOrWhiteSpace(Input_URL1.Text))
-                {
-                    webClient.DownloadDataAsync(new Uri(UrlInput.Text));
-                }
-            }*//*
-
-            private void StopButton_Click(object sender, RoutedEventArgs e)
-            {
-                webClient.CancelAsync();
-                TotalProgress = 0;
-            }
-
-            protected virtual void OnPropertyChanged(string propertyName)
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                MessageBox.Show("Failed to load image.");
             }
         }
-*/
     }
 }

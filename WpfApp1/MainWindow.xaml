@@ -28,23 +28,23 @@
        
 
         <Image Grid.Row="0" Grid.Column="0"
-               x:Name="Image1" Grid.ColumnSpan="2" Margin="0,0,266,0"/>
+               x:Name="Image1" Grid.ColumnSpan="2" Margin="0,0,266,0" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <Image Grid.Row="0" Grid.Column="1"
-            x:Name="Image2"/>
+            x:Name="Image2" Stretch="None"/>
         <Image Grid.Row="0" Grid.Column="1"
-            x:Name="Image3" Grid.ColumnSpan="2" Margin="266,0,0,0"/>
+            x:Name="Image3" Grid.ColumnSpan="2" Margin="266,0,0,0" Stretch="None" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
         <TextBox Grid.Row="1" Grid.Column="0"
             x:Name="Input_URL1"
-            Text="Введите адрес картинки №1"
-            Style="{StaticResource Style_Input}" MouseMove="Input_URL1_MouseMove" Margin="5,5,5,5"/>
+            Text="https://kartin.papik.pro/uploads/posts/2023-06/thumbs/1686697924_kartin-papik-pro-p-kartinki-krasivie-prirodi-visokogo-kachest-69.jpg"
+            Style="{StaticResource Style_Input}" Margin="5,5,5,5"/>
         <TextBox Grid.Row="1" Grid.Column="1"
             x:Name="Input_URL2"
-            Text="Введите адрес картинки №2"
-            Style="{StaticResource Style_Input}" MouseMove="Input_URL2_MouseMove" Margin="5,5,5,5"/>
+            Text="https://kartin.papik.pro/uploads/posts/2023-06/thumbs/1686741358_kartin-papik-pro-p-kartinki-krasivie-prirodi-na-rabochii-stol-38.jpg"
+            Style="{StaticResource Style_Input}" Margin="5,5,5,5"/>
         <TextBox Grid.Row="1" Grid.Column="2"
             x:Name="Input_URL3"
-            Text="Введите адрес картинки №3"
-            Style="{StaticResource Style_Input}" MouseMove="Input_URL3_MouseMove" Margin="5,5,5,5"/>
+            Text="https://kartin.papik.pro/uploads/posts/2023-06/thumbs/1686813881_kartin-papik-pro-p-kartinki-8k-priroda-27.jpg"
+            Style="{StaticResource Style_Input}" Margin="5,5,5,5"/>
 
         <Button Grid.Row="2"
                 x:Name="Start1"
@@ -83,7 +83,7 @@
             HorizontalContentAlignment="Center" Margin="0,43,0,43" Grid.RowSpan="3"/>
         <ProgressBar Grid.Row="4"
             x:Name="ProgressBar" Orientation="Horizontal"
-            Margin="0,25,0,10" Width="800" HorizontalAlignment="Center" ValueChanged="Scroll_ValueChanged" Grid.Column="1"/>
+            Margin="0,25,0,10" Width="800" HorizontalAlignment="Center" Grid.Column="1" Height="20"/>
         <Button  Grid.Row="5" Grid.Column="1"
             x:Name="DownloadAll"
             Content="Загрузить всё"
